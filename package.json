@@ -1,0 +1,19 @@
+{
+    "name": "my-userscripts",
+    "private": true,
+    "workspaces": [
+        "scripts/*"
+    ],
+    "scripts": {
+        "update-versions": "node scripts/update-version.js",
+        "release": "for dir in scripts/*/; do (cd $dir && npx semantic-release); done"
+    },
+    "devDependencies": {
+        "@semantic-release/changelog": "^6.0.3",
+        "@semantic-release/commit-analyzer": "^10.0.0",
+        "@semantic-release/git": "^10.0.1",
+        "@semantic-release/github": "^9.2.6",
+        "@semantic-release/release-notes-generator": "^10.0.0",
+        "semantic-release": "^23.1.1"
+    }
+}
