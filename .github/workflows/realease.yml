@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 20
 
-      - run: npm install -g semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/github @semantic-release/commit-analyzer @semantic-release/release-notes-generator
+      - run: npm install -g semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/github @semantic-release/commit-analyzer @semantic-release/release-notes-generator @actions/github
 
       - name: Run semantic-release per script
         run: |
