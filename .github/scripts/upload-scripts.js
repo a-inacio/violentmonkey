@@ -1,5 +1,3 @@
-//.github/scripts/upload-scripts.js
-
 const fs = require('fs');
 const path = require('path');
 
@@ -15,9 +13,9 @@ module.exports = async function ({ github, context, core }) {
   }
 
   for (const folder of scriptFolders) {
-    const assetPath = path.join('scripts', folder, 'src', 'main.js');
-    if (!fs.existsSync(assetPath)) {
-      console.log(`No main.js in ${folder}, skipping.`);
+    const distPath = path.join('scripts', folder, 'dist', `${folder}.user.js`);
+    if (!fs.existsSync(distPath)) {
+      console.log(`No release file in ${folder}/dist, skipping.`);
       continue;
     }
 
@@ -33,7 +31,7 @@ module.exports = async function ({ github, context, core }) {
       repo: context.repo.repo,
       release_id: release.data.id,
       name: `${folder}.user.js`,
-      data: fs.readFileSync(assetPath),
+      data: fs.readFileSync(distPath),
       headers: {
         'content-type': 'application/javascript'
       }
