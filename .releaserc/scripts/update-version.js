@@ -9,6 +9,18 @@ module.exports = {
     const scriptDir = process.env.SCRIPT_FOLDER || cwd;
 
     try {
+      // Update package.json version
+      const pkgPath = path.join(scriptDir, 'package.json');
+      if (fs.existsSync(pkgPath)) {
+        const pkg = require(pkgPath);
+        pkg.version = version;
+        fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2), 'utf8');
+        logger.log(`Updated ${pkg.name} version to ${version} in package.json`);
+      } else {
+        logger.log(`No package.json found in ${scriptDir}, skipping version update.`);
+      }
+
+      // Generate release-ready dist/main.user.js with dynamic headers
       const srcPath = path.join(scriptDir, 'src', 'main.js');
       if (!fs.existsSync(srcPath)) {
         logger.log(`No main.js in ${scriptDir}, skipping.`);
