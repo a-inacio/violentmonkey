@@ -1,6 +1,9 @@
 // .releaserc.js
 const path = require('path');
 
+// Use SCRIPT_FOLDER from env, fallback to repo root
+const scriptDir = process.env.SCRIPT_FOLDER || process.cwd();
+
 module.exports = {
   branches: ['main'],
   plugins: [
@@ -9,7 +12,7 @@ module.exports = {
     [
       '@semantic-release/changelog',
       {
-        changelogFile: path.resolve(process.cwd(), 'CHANGELOG.md')
+        changelogFile: path.resolve(scriptDir, 'CHANGELOG.md')
       }
     ],
     ['./.releaserc/scripts/update-version.js', {}],

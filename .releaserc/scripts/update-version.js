@@ -16,9 +16,9 @@ module.exports = {
 
       const pkg = require(pkgPath);
 
-      const filePath = path.join(cwd, 'src', 'main.user.js');
+      const filePath = path.join(cwd, 'src', 'main.js');
       if (!fs.existsSync(filePath)) {
-        logger.log(`No main.user.js in ${pkg.name}, skipping.`);
+        logger.log(`No main.js in ${pkg.name}, skipping.`);
         return;
       }
 
