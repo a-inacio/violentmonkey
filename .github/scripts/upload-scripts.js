@@ -1,3 +1,5 @@
+//.github/scripts/upload-scripts.js
+
 const fs = require('fs');
 const path = require('path');
 

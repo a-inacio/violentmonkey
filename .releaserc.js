@@ -1,4 +1,5 @@
 // .releaserc/scripts/update-version.js
+
 const fs = require('fs');
 const path = require('path');
 

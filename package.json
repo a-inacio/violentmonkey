@@ -5,8 +5,8 @@
         "scripts/*"
     ],
     "scripts": {
-        "update-versions": "node scripts/update-version.js",
-        "release": "for dir in scripts/*/; do (cd $dir && npx semantic-release); done"
+        "release": "node .releaserc/scripts/release-all.js",
+        "release:prod": "node .releaserc/scripts/release-all.js false"
     },
     "devDependencies": {
         "@semantic-release/changelog": "^6.0.3",
