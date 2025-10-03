@@ -30,12 +30,18 @@ jobs:
 
       - name: Run semantic-release per script
         run: |
-          for dir in scripts/*/; do
-            echo "Releasing script in folder: $dir"
-            cd "$dir"
-            npx semantic-release
-            cd ../../
-          done
+          shopt -s nullglob
+          dirs=(scripts/*/)
+          if [ ${#dirs[@]} -eq 0 ]; then
+            echo "No script folders found, skipping semantic-release."
+          else
+            for dir in "${dirs[@]}"; do
+              echo "Releasing script in folder: $dir"
+              cd "$dir"
+              npx semantic-release
+              cd ../../
+            done
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
