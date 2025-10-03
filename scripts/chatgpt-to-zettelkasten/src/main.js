@@ -1,16 +1,3 @@
-// ==UserScript==
-// @name        ChatGPT to Zettelkasten
-// @namespace   https://github.com/a-inacio/violentmonkey
-// @match       https://chatgpt.com/*
-// @grant       none
-// @version     0.0.0
-// @author      António Inácio
-// @description Generate a prompt to request a zettelkasten summary of the learnings 
-// @updateURL   https://github.com/a-inacio/violentmonkey/releases/latest/download/chatgpt-to-zettelkasten.user.js
-// @downloadURL https://github.com/a-inacio/violentmonkey/releases/latest/download/chatgpt-to-zettelkasten.user.js
-// ==/UserScript==
-
-
 (function () {
   'use strict';
 

@@ -1,5 +1,5 @@
 {
-    "name": "my-userscripts",
+    "name": "violentmonkey",
     "private": true,
     "workspaces": [
         "scripts/*"

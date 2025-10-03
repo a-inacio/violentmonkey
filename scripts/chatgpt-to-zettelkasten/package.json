@@ -1,5 +1,12 @@
 {
-  "name": "chatgpt-to-zettelkasten",
-  "version": "1.0.0",
-  "private": true
+    "name": "chatgpt-to-zettelkasten",
+    "version": "0.0.0",
+    "private": true,
+    "description": "Generate a prompt to request a zettelkasten summary of the learnings",
+    "violentmonkey": {
+        "name": "ChatGPT to Zettelkasten",
+        "match": [
+            "https://chatgpt.com/*"
+        ]
+    }
 }

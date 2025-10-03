@@ -6,23 +6,44 @@ module.exports = {
   prepare: async (pluginConfig, context) => {
     const { nextRelease, logger, cwd } = context;
     const version = nextRelease.version;
-
     const scriptDir = process.env.SCRIPT_FOLDER || cwd;
 
     try {
-      const pkgPath = path.join(scriptDir, 'package.json');
-      if (!fs.existsSync(pkgPath)) {
-        logger.log(`No package.json found in ${scriptDir}, skipping.`);
+      const srcPath = path.join(scriptDir, 'src', 'main.js');
+      if (!fs.existsSync(srcPath)) {
+        logger.log(`No main.js in ${scriptDir}, skipping.`);
         return;
       }
 
-      const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-      pkg.version = version;
-      fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n', 'utf8');
+      // Read source
+      const srcContent = fs.readFileSync(srcPath, 'utf8');
 
-      logger.log(`Bumped ${pkg.name || scriptDir} package.json to ${version}`);
+      // Create dist folder if it doesn't exist
+      const distDir = path.join(scriptDir, 'dist');
+      if (!fs.existsSync(distDir)) fs.mkdirSync(distDir);
+
+      // Build userscript header
+      const pkg = require(path.join(scriptDir, 'package.json'));
+      const header = `// ==UserScript==
+// @name        ${pkg.violentmonkey?.name || pkg.name}
+// @namespace   https://github.com/a-inacio/violentmonkey
+// @match       ${pkg.violentmonkey?.match?.join('\n// @match       ')}
+// @grant       none
+// @version     ${version}
+// @author      António Inácio
+// @description ${pkg.description || ''}
+// @updateURL   https://github.com/a-inacio/violentmonkey/releases/latest/download/${pkg.name}.user.js
+// @downloadURL https://github.com/a-inacio/violentmonkey/releases/latest/download/${pkg.name}.user.js
+// ==/UserScript==\n\n`;
+
+      const releaseContent = header + srcContent;
+
+      const releaseFile = path.join(distDir, `${pkg.name}.user.js`);
+      fs.writeFileSync(releaseFile, releaseContent, 'utf8');
+
+      logger.log(`Generated release file: ${releaseFile}`);
     } catch (err) {
-      logger.error(`Error updating package.json in ${scriptDir}: ${err.message}`);
+      logger.error(`Error generating release file: ${err.message}`);
       throw err;
     }
   }
