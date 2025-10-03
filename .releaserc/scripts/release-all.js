@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 const { execSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
@@ -28,7 +27,7 @@ if (dirs.length === 0) {
 dirs.forEach(dir => {
   console.log(`\nReleasing in ${dir}`);
   execSync(
-    `npx semantic-release --extends "${path.resolve(__dirname, "../../.releaserc.js")}" --cwd "${dir}" ${dryRunFlag}`,
+    `npx semantic-release --extends "${path.resolve(__dirname, "../../.releaserc.json")}" --cwd "${dir}" ${dryRunFlag}`,
     { stdio: "inherit" }
   );
 });
