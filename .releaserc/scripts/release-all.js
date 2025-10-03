@@ -4,12 +4,11 @@ const fs = require("fs");
 const path = require("path");
 
 // Parse command line argument for dry run
-// Default: true (dry-run)
 const dryRun = process.argv[2] !== "false";
 const dryRunFlag = dryRun ? "--dry-run" : "";
 
-// Root of the repository 
-const repoRoot = path.resolve(__dirname, "../../");
+// Use current working directory as repo root
+const repoRoot = process.cwd();
 
 // Path to the scripts folder
 const scriptsRoot = path.join(repoRoot, "scripts");
