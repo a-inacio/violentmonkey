@@ -1,34 +1,32 @@
-const fs = require('fs');
-const path = require('path');
-const github = require('@actions/github');
+export default async ({ github, context }) => {
+  const fs = require('fs');
+  const path = require('path');
 
-const token = process.env.GITHUB_TOKEN;
-if (!token) {
-  console.error("GITHUB_TOKEN not set");
-  process.exit(1);
-}
+  // Get all subfolders in scripts/
+  const scriptFolders = fs.readdirSync('scripts').filter(f =>
+    fs.statSync(path.join('scripts', f)).isDirectory()
+  );
 
-const octokit = github.getOctokit(token);
-const { context } = github;
+  if (scriptFolders.length === 0) {
+    console.log("No script folders found, skipping upload.");
+    return;
+  }
 
-// Get all subfolders in scripts/
-const scriptFolders = fs.readdirSync('scripts').filter(f =>
-  fs.statSync(path.join('scripts', f)).isDirectory()
-);
-
-(async () => {
   for (const folder of scriptFolders) {
     const assetPath = path.join('scripts', folder, 'src', 'main.user.js');
-    if (!fs.existsSync(assetPath)) continue;
+    if (!fs.existsSync(assetPath)) {
+      console.log(`No main.user.js in ${folder}, skipping.`);
+      continue;
+    }
 
-    // Get the latest release
-    const release = await octokit.rest.repos.getLatestRelease({
+    // Get latest release
+    const release = await github.rest.repos.getLatestRelease({
       owner: context.repo.owner,
       repo: context.repo.repo
     });
 
-    // Upload the script as release asset
-    await octokit.rest.repos.uploadReleaseAsset({
+    // Upload the asset
+    await github.rest.repos.uploadReleaseAsset({
       owner: context.repo.owner,
       repo: context.repo.repo,
       release_id: release.data.id,
@@ -41,4 +39,4 @@ const scriptFolders = fs.readdirSync('scripts').filter(f =>
 
     console.log(`Uploaded ${folder}.user.js to release`);
   }
-})();
+};

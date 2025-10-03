@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 20
 
-      - run: npm install -g semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/github @semantic-release/commit-analyzer @semantic-release/release-notes-generator @actions/github
+      - run: npm install -g semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/github @semantic-release/commit-analyzer @semantic-release/release-notes-generator
 
       - name: Run semantic-release per script
         run: |
@@ -43,6 +43,7 @@ jobs:
           git commit -m "chore: update script versions" || echo "No changes to commit"
 
       - name: Upload scripts to GitHub Releases
-        run: node .github/scripts/upload-scripts.js
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: .github/scripts/upload-scripts.js
