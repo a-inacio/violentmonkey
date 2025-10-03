@@ -1,34 +1,28 @@
+// .releaserc/scripts/update-version.js
 const fs = require('fs');
 const path = require('path');
 
 module.exports = {
-  // semantic-release calls the plugin's "verifyConditions", "prepare", or "publish" methods
   prepare: async (pluginConfig, context) => {
     const { nextRelease, logger, cwd } = context;
     const version = nextRelease.version;
 
+    const scriptDir = process.env.SCRIPT_FOLDER || cwd;
+
     try {
-      const pkgPath = path.join(cwd, 'package.json');
+      const pkgPath = path.join(scriptDir, 'package.json');
       if (!fs.existsSync(pkgPath)) {
-        logger.log(`No package.json found in ${cwd}, skipping.`);
+        logger.log(`No package.json found in ${scriptDir}, skipping.`);
         return;
       }
 
-      const pkg = require(pkgPath);
+      const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+      pkg.version = version;
+      fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n', 'utf8');
 
-      const filePath = path.join(cwd, 'src', 'main.js');
-      if (!fs.existsSync(filePath)) {
-        logger.log(`No main.js in ${pkg.name}, skipping.`);
-        return;
-      }
-
-      let content = fs.readFileSync(filePath, 'utf8');
-      content = content.replace(/(@version\s+)(\S+)/, `$1${version}`);
-      fs.writeFileSync(filePath, content, 'utf8');
-
-      logger.log(`Updated ${pkg.name} to version ${version}`);
+      logger.log(`Bumped ${pkg.name || scriptDir} package.json to ${version}`);
     } catch (err) {
-      logger.error(`Error updating version: ${err.message}`);
+      logger.error(`Error updating package.json in ${scriptDir}: ${err.message}`);
       throw err;
     }
   }

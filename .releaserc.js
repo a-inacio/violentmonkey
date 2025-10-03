@@ -20,7 +20,7 @@ module.exports = {
       '@semantic-release/git',
       {
         assets: [
-          'src/main.user.js',
+          'src/main.js',
           'CHANGELOG.md',
           'package.json'
         ],
@@ -30,7 +30,7 @@ module.exports = {
     [
       '@semantic-release/github',
       {
-        assets: 'src/main.user.js'
+        assets: 'src/main.js'
       }
     ]
   ]
