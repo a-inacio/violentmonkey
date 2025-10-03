@@ -98,10 +98,9 @@ Write a zettlekasten summary of the learnings on this whole chat, with template,
 
   // Hotkey: Cmd (Mac) or Ctrl (Win/Linux) + Shift + Z
   document.addEventListener('keydown', function (e) {
-    const isMac = navigator.platform.toUpperCase().includes('MAC');
-    if (((isMac && e.metaKey) || (!isMac && e.ctrlKey)) && e.shiftKey && e.key.toLowerCase() === 'z') {
-      e.preventDefault();
-      insertPrompt();
-    }
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase() === 'z') {
+          e.preventDefault();
+          insertPrompt();
+      }
   });
 })();
