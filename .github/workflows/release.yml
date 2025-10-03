@@ -31,6 +31,8 @@ jobs:
           git commit -m "chore: update script versions" || echo "No changes to commit"
 
       - name: Upload scripts to GitHub Releases
-        run: node .github/scripts/upload-scripts.js
+        run: |
+          const upload = require('./.github/scripts/upload-scripts.js');
+          await upload({ github, context, core });
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
