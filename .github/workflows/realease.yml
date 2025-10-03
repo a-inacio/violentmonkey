@@ -19,7 +19,7 @@ jobs:
       - run: npm install -g semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/github @semantic-release/commit-analyzer @semantic-release/release-notes-generator
 
       - name: Update script versions
-        run: node scripts/update-version.js
+        run: node .github/scripts/update-version.js
 
       - name: Commit version updates
         run: |
