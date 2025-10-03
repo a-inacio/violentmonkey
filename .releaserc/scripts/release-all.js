@@ -32,7 +32,7 @@ dirs.forEach(dir => {
   const env = { ...process.env, SCRIPT_FOLDER: dir };
 
   execSync(
-    `npx semantic-release --extends "${path.join(repoRoot, ".releaserc.json")}" ${dryRunFlag}`,
+    `npx semantic-release --extends "${path.join(repoRoot, ".releaserc.js")}" ${dryRunFlag}`,
     { stdio: "inherit", cwd: repoRoot, env }
   );
 });
