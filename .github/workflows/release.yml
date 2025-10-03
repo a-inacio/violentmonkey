@@ -16,11 +16,10 @@ jobs:
         with:
           node-version: 20
 
-      - run: npm install -g semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/github @semantic-release/commit-analyzer @semantic-release/release-notes-generator
+      - run: npm install
 
       - name: Run semantic-release per script
-        run: |
-          npm run release:prod
+        run: npm run release:prod
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -32,9 +31,6 @@ jobs:
           git commit -m "chore: update script versions" || echo "No changes to commit"
 
       - name: Upload scripts to GitHub Releases
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const upload = require('./.github/scripts/upload-scripts.js');
-            await upload({ github, context, core });
+        run: node .github/scripts/upload-scripts.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
