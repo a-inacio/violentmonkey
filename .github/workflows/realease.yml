@@ -27,9 +27,7 @@ jobs:
           else
             for dir in "${dirs[@]}"; do
               echo "Releasing script in folder: $dir"
-              cd "$dir"
-              npx semantic-release --extends ../../.releaserc/.releaserc.json
-              cd ../../
+              npx semantic-release --extends .releaserc/.releaserc.json --cwd "$dir"
             done
           fi
         env:
