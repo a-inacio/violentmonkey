@@ -12,7 +12,7 @@
             }
         ],
         [
-            "./.github/scripts/update-version.js"
+            "./.releaserc/scripts/update-version.js"
         ],
         [
             "@semantic-release/git",
