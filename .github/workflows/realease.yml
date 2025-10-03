@@ -46,4 +46,6 @@ jobs:
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: .github/scripts/upload-scripts.js
+          script: |
+            const upload = require('./.github/scripts/upload-scripts.js');
+            await upload({ github, context, core });

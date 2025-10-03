@@ -1,7 +1,7 @@
-export default async ({ github, context }) => {
-  const fs = require('fs');
-  const path = require('path');
+const fs = require('fs');
+const path = require('path');
 
+module.exports = async function ({ github, context, core }) {
   // Get all subfolders in scripts/
   const scriptFolders = fs.readdirSync('scripts').filter(f =>
     fs.statSync(path.join('scripts', f)).isDirectory()
