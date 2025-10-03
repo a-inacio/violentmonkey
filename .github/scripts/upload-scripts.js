@@ -15,9 +15,9 @@ module.exports = async function ({ github, context, core }) {
   }
 
   for (const folder of scriptFolders) {
-    const assetPath = path.join('scripts', folder, 'src', 'main.user.js');
+    const assetPath = path.join('scripts', folder, 'src', 'main.js');
     if (!fs.existsSync(assetPath)) {
-      console.log(`No main.user.js in ${folder}, skipping.`);
+      console.log(`No main.js in ${folder}, skipping.`);
       continue;
     }
 
