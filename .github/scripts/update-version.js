@@ -1,21 +1,22 @@
 const fs = require('fs');
 const path = require('path');
 
-const scriptsDir = path.resolve(__dirname, '../../scripts');
+module.exports = async function(pluginConfig, context) {
+  const { nextRelease, logger } = context;
+  const version = nextRelease.version;
 
-const scriptFolders = fs.readdirSync(scriptsDir).filter(f =>
-  fs.statSync(path.join(scriptsDir, f)).isDirectory()
-);
-
-scriptFolders.forEach(folder => {
-  const pkgPath = path.join(scriptsDir, folder, 'package.json');
+  const pkgPath = path.join(process.cwd(), 'package.json');
   const pkg = require(pkgPath);
-  const version = pkg.version;
 
-  const filePath = path.join(scriptsDir, folder, 'src', 'main.user.js');
+  const filePath = path.join(process.cwd(), 'src', 'main.user.js');
+  if (!fs.existsSync(filePath)) {
+    logger.log(`No main.user.js in ${pkg.name}, skipping.`);
+    return;
+  }
+
   let content = fs.readFileSync(filePath, 'utf8');
   content = content.replace(/(@version\s+)(\S+)/, `$1${version}`);
   fs.writeFileSync(filePath, content, 'utf8');
 
-  console.log(`Updated ${folder} to version ${version}`);
-});
+  logger.log(`Updated ${pkg.name} to version ${version}`);
+};

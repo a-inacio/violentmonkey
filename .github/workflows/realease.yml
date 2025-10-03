@@ -18,16 +18,6 @@ jobs:
 
       - run: npm install -g semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/github @semantic-release/commit-analyzer @semantic-release/release-notes-generator
 
-      - name: Update script versions
-        run: node .github/scripts/update-version.js
-
-      - name: Commit version updates
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "chore: update script versions" || echo "No changes to commit"
-
       - name: Run semantic-release per script
         run: |
           shopt -s nullglob
@@ -38,12 +28,22 @@ jobs:
             for dir in "${dirs[@]}"; do
               echo "Releasing script in folder: $dir"
               cd "$dir"
-              npx semantic-release
+              npx semantic-release --extends ../../.releaserc.json
               cd ../../
             done
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update script versions
+        run: node .github/scripts/update-version.js
+
+      - name: Commit version updates
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "chore: update script versions" || echo "No changes to commit"
 
       - name: Upload scripts to GitHub Releases
         uses: actions/github-script@v7
