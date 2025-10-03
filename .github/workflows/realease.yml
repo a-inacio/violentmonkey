@@ -8,19 +8,18 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install dependencies
-        run: npm install
+      - run: npm install -g semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/github @semantic-release/commit-analyzer @semantic-release/release-notes-generator
 
-      - name: Update @version in scripts
-        run: npm run update-versions
+      - name: Update script versions
+        run: node scripts/update-version.js
 
       - name: Commit version updates
         run: |
@@ -30,6 +29,47 @@ jobs:
           git commit -m "chore: update script versions" || echo "No changes to commit"
 
       - name: Run semantic-release per script
-        run: npm run release
+        run: |
+          for dir in scripts/*/; do
+            echo "Releasing script in folder: $dir"
+            cd "$dir"
+            npx semantic-release
+            cd ../../
+          done
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload scripts to GitHub Releases
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const scriptFolders = fs.readdirSync('scripts').filter(f =>
+              fs.statSync(path.join('scripts', f)).isDirectory()
+            );
+
+            for (const folder of scriptFolders) {
+              const assetPath = path.join('scripts', folder, 'src', 'main.user.js');
+              if (!fs.existsSync(assetPath)) continue;
+
+              const release = await github.rest.repos.getLatestRelease({
+                owner: context.repo.owner,
+                repo: context.repo.repo
+              });
+
+              await github.rest.repos.uploadReleaseAsset({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: release.data.id,
+                name: `${folder}.user.js`,
+                data: fs.readFileSync(assetPath),
+                headers: {
+                  'content-type': 'application/javascript'
+                }
+              });
+
+              console.log(`Uploaded ${folder}.user.js to release`);
+            }
