@@ -3,11 +3,6 @@ const path = require('path');
 
 const scriptsDir = path.resolve(__dirname, '../../scripts');
 
-if (!fs.existsSync(scriptsDir)) {
-  console.log("No scripts/ directory found. Skipping version update.");
-  process.exit(0);
-}
-
 const scriptFolders = fs.readdirSync(scriptsDir).filter(f =>
   fs.statSync(path.join(scriptsDir, f)).isDirectory()
 );
