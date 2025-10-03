@@ -1,6 +1,6 @@
 {
   "name": "chatgpt-to-zettelkasten",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Generate a prompt to request a zettelkasten summary of the learnings",
   "violentmonkey": {
